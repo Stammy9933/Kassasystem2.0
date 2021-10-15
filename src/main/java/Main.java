@@ -3,9 +3,14 @@ import java.util.Scanner;
 
 public class Main {
 
+    private Order order;
+    private Membership membership;
+    private Customer customer;
+    private ArrayList<Order> orders = new ArrayList<>();
     private ArrayList<Customer> customers = new ArrayList<>();
-    Scanner keyboardInput = new Scanner(System.in);
+    private Scanner keyboardInput = new Scanner(System.in);
     private ArrayList<Product> products = new ArrayList<>();
+
     public static void main(String[] args){
         Main program = new Main();
         program.run();
@@ -35,7 +40,7 @@ public class Main {
         products.add(snus);
     }
 
-    public void showProducts(){
+    private void showProducts(){
         for(Product p : products){
             System.out.println(p);
         }
@@ -50,6 +55,9 @@ public class Main {
 
     private void startUp(){
         System.out.println("Welcome!");
+        addCustomer();
+        addMembership();
+        addOrder();
         printCommands();
         commandLoop();
     }
@@ -57,25 +65,38 @@ public class Main {
     private void printCommands(){
         System.out.println("The following commands exist");
         System.out.println("1.Show products");
-        System.out.println("2.Create order");
-        System.out.println("3.Add product");
-        System.out.println("4.Add discount");
-        System.out.println("5.Add customer");
-        System.out.println("6.Add Membership");
-        System.out.println("7. ");
-        System.out.println("");
+        System.out.println("2.Add product");
+        System.out.println("3.Add discount");
+        System.out.println("4.Remove product ");
+        System.out.println("5.Pay");
         System.out.println("");
     }
 
-    public void addCustomer(){
+    private void addCustomer(){
         System.out.println("What is your name?");
         String name = keyboardInput.nextLine();
         System.out.println("What is your social security number?");
         String ssn = keyboardInput.nextLine();
         System.out.println("How much money do you have?");
         double money = keyboardInput.nextDouble();
-        Customer newCustomer = new Customer(name, ssn, new Money(money));
-        customers.add(newCustomer);
+        customer = new Customer(name, ssn, new Money(money));
+    }
+
+    private void addMembership(){
+        System.out.println("Do you want to be a member? Answer yes or no");
+        String choice = keyboardInput.nextLine();
+        if(choice.equalsIgnoreCase("yes")){
+            membership = new Membership(customer);
+        }
+    }
+
+    private void addOrder(){
+        if(membership != null){
+            order = new Order(membership);
+        }
+        else{
+            order = new Order();
+        }
     }
 
     private void commandLoop(){

@@ -3,7 +3,7 @@ import java.util.ArrayList;
 public class Order {
     private static final Membership NO_MEMBERSHIP = new Membership(new Customer("DEFAULT", "1234567890", new Money(10000)));
     private ArrayList<Product> products = new ArrayList<>();
-    Membership membership;
+    private Membership membership;
     private double totalPrice;
     private boolean isPaid;
 
