@@ -1,6 +1,6 @@
 public class Checkout {
     private Order order;
-    Customer customer;
+    private Customer customer;
 
     public Checkout(Order order, Customer customer){
         this.order = order;
