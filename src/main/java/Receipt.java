@@ -33,7 +33,9 @@ public class Receipt {
         for (Product p : order.getProductList()) {
             sb.append(p.toString()).append("\n");
         }
-        sb.append("Total price: ").append(order.getTotalPrice());
+        double roundedPrice =  Math.round(order.getTotalPrice()*100.0)/100.0;
+        sb.append("Total price: ").append(roundedPrice);
+
         return sb.toString();
     }
 }

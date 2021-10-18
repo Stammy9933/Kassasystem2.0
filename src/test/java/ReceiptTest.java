@@ -14,6 +14,10 @@ class ReceiptTest {
         o.addProduct(p2);
         Date date = new Date(2323223232L);
         Receipt r = new Receipt(o, date);
-        assertEquals("1970-01-28 at 02:50:23 IST" + "\n" + "Milk, " + 5.3 + "\n" + "Total price: " + 5.3 + "kr", r.receiptToString());
+        Checkout checkout = new Checkout(o);
+        checkout.pay();
+        assertEquals("1970-01-27 at 22:20:23 CET" + "\n"
+                    + "Milk, " + 5.3 + "\n"
+                    + "Loaf, " + 8.96 + "\n" + "Total price: " + 14.26, r.receiptToString());
     }
 }
