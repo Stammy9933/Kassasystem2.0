@@ -11,12 +11,12 @@ public class Main {
     private Scanner keyboardInput = new Scanner(System.in);
     private ArrayList<Product> products = new ArrayList<>();
 
-    public static void main(String[] args){
+    public static void main(String[] args) {
         Main program = new Main();
         program.run();
     }
 
-    private void createProducts(){
+    private void createProducts() {
         Vat12 vat12 = new Vat12();
         Vat6 vat6 = new Vat6();
         Vat25 vat25 = new Vat25();
@@ -40,20 +40,19 @@ public class Main {
         products.add(snus);
     }
 
-    private void showProducts(){
-        for(Product p : products){
+    private void showProducts() {
+        for (Product p : products) {
             System.out.println(p);
         }
     }
 
-
-    public void run(){
+    public void run() {
         createProducts();
         startUp();
 
     }
 
-    private void startUp(){
+    private void startUp() {
         System.out.println("Welcome!");
         askForMembership();
         addMembership();
@@ -61,31 +60,30 @@ public class Main {
         commandLoop();
     }
 
-    private void askForMembership(){
+    private void askForMembership() {
         System.out.println("Do you have a membership? Answer yes or no");
         String choice = keyboardInput.nextLine();
-        if(choice.equalsIgnoreCase("yes")){
+        if (choice.equalsIgnoreCase("yes")) {
             addCustomer();
             addMembership();
-        }
-        else if(choice.equalsIgnoreCase("no")){ //If there's not a membership, create a empty customer with only the amount of brought money
+        } else if (choice.equalsIgnoreCase("no")) { //If there's not a membership, create a empty customer with only the amount of brought money
             customer = new Customer(new Money(askForMoney()));
         }
     }
 
-    private void printOrder(){
-        for(Product p : order.getProducts()){
+    private void printOrder() {
+        for (Product p : order.getProducts()) {
             System.out.println(p);
         }
     }
 
-    private double askForMoney(){
+    private double askForMoney() {
         System.out.println("How much money do you have?");
         double money = keyboardInput.nextDouble();
         return money;
     }
 
-    private void printCommands(){
+    private void printCommands() {
         System.out.println("The following commands exist. Please write the number of the command");
         System.out.println("1.Show products");
         System.out.println("2.Add product");
@@ -96,7 +94,7 @@ public class Main {
         System.out.println("7.Show order");
     }
 
-    private void addCustomer(){
+    private void addCustomer() {
         System.out.println("What is your name?");
         String name = keyboardInput.nextLine();
         System.out.println("What is your social security number?");
@@ -106,68 +104,66 @@ public class Main {
         customer = new Customer(name, ssn, new Money(money));
     }
 
-    private void addMembership(){
+    private void addMembership() {
         membership = new Membership(customer);
     }
 
-    private void addOrder(){
-        if(membership != null){
+    private void addOrder() {
+        if (membership != null) {
             order = new Order(membership);
-        }
-        else{
+        } else {
             order = new Order();
         }
     }
 
-    private void addProduct(){
+    private void addProduct() {
         System.out.println("What is the name of the product?");
         String productName = keyboardInput.nextLine().toLowerCase();
         Product product = null;
-        for(Product p : products){
-            if(p.getName().toLowerCase().equals(productName)){
+        for (Product p : products) {
+            if (p.getName().toLowerCase().equals(productName)) {
                 product = p;
             }
         }
         Scan scan = new Scan(product, order);
     }
 
-    private void addDiscount(){
+    private void addDiscount() {
         order.addStaticDiscount(membership.getDiscount());
     }
 
-    private void removeProduct(){
+    private void removeProduct() {
         System.out.println("What is the name of the product?");
         String productName = keyboardInput.nextLine().toLowerCase();
         Product product = null;
-        for(Product p : products){
-            if(p.getName().toLowerCase().equals(productName)){
+        for (Product p : products) {
+            if (p.getName().toLowerCase().equals(productName)) {
                 product = p;
             }
         }
-        if(product != null){
+        if (product != null) {
             order.removeProduct(product);
-        }
-        else{
+        } else {
             System.out.println("There is no product with that name.");
         }
     }
 
-    public void pay(){
+    public void pay() {
         Checkout checkout = new Checkout(order);
         checkout.pay();
     }
 
-    public void buyDiscount(){
+    public void buyDiscount() {
         membership.buyStaticDiscount();
         System.out.println("Your points are converted to a discount");
     }
 
-    private void commandLoop(){
+    private void commandLoop() {
         String choice;
-        do{
+        do {
             System.out.println("Command?>");
             choice = keyboardInput.nextLine();
-            switch(choice){
+            switch (choice) {
                 case "1":
                     showProducts();
                     break;
@@ -194,7 +190,7 @@ public class Main {
                     printCommands();
             }
         }
-        while(!choice.equals("exit"));
+        while (!choice.equals("exit"));
     }
 
 }

@@ -8,11 +8,11 @@ public class Order {
     private boolean isPaid;
 
 
-    public Order(Membership membership){
+    public Order(Membership membership) {
         this.membership = membership;
     }
 
-    public Order(){
+    public Order() {
         membership = NO_MEMBERSHIP;
     }
 
@@ -24,22 +24,22 @@ public class Order {
         products.add(product);
     }
 
-    public void setTotalPrice(){
-        for(Product p : products){
+    public void setTotalPrice() {
+        for (Product p : products) {
             totalPrice += p.getPricePlusVat();
         }
     }
 
-    public void removeProduct(Product product){
+    public void removeProduct(Product product) {
         products.remove(product);
     }
 
-    public double getTotalPrice(){
+    public double getTotalPrice() {
         return totalPrice;
     }
 
-    public void addStaticDiscount(StaticDiscount discount){
-        if(discount.getDiscount() > 0){
+    public void addStaticDiscount(StaticDiscount discount) {
+        if (discount.getDiscount() > 0) {
             totalPrice -= discount.getDiscount();
             discount.getMembership().removeDiscount();
         }
@@ -49,15 +49,15 @@ public class Order {
         return new ArrayList<Product>(products);
     }
 
-    public void gotPaid(){
+    public void gotPaid() {
         isPaid = true;
     }
 
-    public boolean isPaid(){
+    public boolean isPaid() {
         return isPaid;
     }
 
-    public Membership getMembership(){
+    public Membership getMembership() {
         return membership;
     }
 }
