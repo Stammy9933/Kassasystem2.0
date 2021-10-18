@@ -33,4 +33,8 @@ public class Membership {
     public Customer getCustomer(){
         return customer;
     }
+
+    public StaticDiscount getDiscount(){
+        return discount;
+    }
 }

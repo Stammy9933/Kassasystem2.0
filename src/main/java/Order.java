@@ -30,13 +30,19 @@ public class Order {
         }
     }
 
+    public void removeProduct(Product product){
+        products.remove(product);
+    }
+
     public double getTotalPrice(){
         return totalPrice;
     }
 
     public void addStaticDiscount(StaticDiscount discount){
-        totalPrice -= discount.getDiscount();
-        discount.getMembership().removeDiscount();
+        if(discount.getDiscount() > 0){
+            totalPrice -= discount.getDiscount();
+            discount.getMembership().removeDiscount();
+        }
     }
 
     public ArrayList<Product> getProductList() {

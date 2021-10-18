@@ -63,13 +63,13 @@ public class Main {
     }
 
     private void printCommands(){
-        System.out.println("The following commands exist");
+        System.out.println("The following commands exist. Please write the number of the command");
         System.out.println("1.Show products");
         System.out.println("2.Add product");
         System.out.println("3.Add discount");
         System.out.println("4.Remove product ");
         System.out.println("5.Pay");
-        System.out.println("");
+        System.out.println("6.Buy discount for points");
     }
 
     private void addCustomer(){
@@ -99,6 +99,49 @@ public class Main {
         }
     }
 
+    private void addProduct(){
+        System.out.println("What is the name of the product?");
+        String productName = keyboardInput.nextLine().toLowerCase();
+        Product product = null;
+        for(Product p : products){
+            if(p.getName().toLowerCase().equals(productName)){
+                product = p;
+            }
+        }
+        Scan scan = new Scan(product, order);
+    }
+
+    private void addDiscount(){
+        order.addStaticDiscount(membership.getDiscount());
+    }
+
+    private void removeProduct(){
+        System.out.println("What is the name of the product?");
+        String productName = keyboardInput.nextLine().toLowerCase();
+        Product product = null;
+        for(Product p : products){
+            if(p.getName().toLowerCase().equals(productName)){
+                product = p;
+            }
+        }
+        if(product != null){
+            order.removeProduct(product);
+        }
+        else{
+            System.out.println("There is no product with that name.");
+        }
+    }
+
+    public void pay(){
+        Checkout checkout = new Checkout(order);
+        checkout.pay();
+    }
+
+    public void buyDiscount(){
+        membership.buyStaticDiscount();
+        System.out.println("Your points are converted to a discount");
+    }
+
     private void commandLoop(){
         String choice;
         do{
@@ -109,22 +152,19 @@ public class Main {
                     showProducts();
                     break;
                 case "2":
-                    //
+                    addProduct();
                     break;
                 case "3":
-                    //
+                    addDiscount();
                     break;
                 case "4":
-                    //
+                    removeProduct();
                     break;
                 case "5":
-                    //
+                    pay();
                     break;
                 case "6":
-                    //
-                    break;
-                case "7":
-                    //
+                    buyDiscount();
                     break;
                 default:
                     System.out.println("Unknown command.");
