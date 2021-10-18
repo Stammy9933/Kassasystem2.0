@@ -1,6 +1,8 @@
 public class Customer {
-    private final String name;
-    private final String ssn;         //social security number (10 characters)
+    private static final String NO_NAME_GIVEN = "DEFAULT";
+    private static final String NO_SSN_GIVEN = "DEFAULT";
+    private String name;
+    private String ssn;
     private String address;
     private String phoneNumber;
     private String emailAddress;
@@ -14,6 +16,12 @@ public class Customer {
         this.name=name;
         this.ssn=ssn;
         this.money = money;
+    }
+
+    public Customer(Money money){
+        this.money = money;
+        name = NO_NAME_GIVEN;
+        ssn = NO_SSN_GIVEN;
     }
 
     public String getName(){

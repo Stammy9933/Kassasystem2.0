@@ -55,11 +55,34 @@ public class Main {
 
     private void startUp(){
         System.out.println("Welcome!");
-        addCustomer();
+        askForMembership();
         addMembership();
         addOrder();
-        printCommands();
         commandLoop();
+    }
+
+    private void askForMembership(){
+        System.out.println("Do you have a membership? Answer yes or no");
+        String choice = keyboardInput.nextLine();
+        if(choice.equalsIgnoreCase("yes")){
+            addCustomer();
+            addMembership();
+        }
+        else if(choice.equalsIgnoreCase("no")){ //If there's not a membership, create a empty customer with only the amount of brought money
+            customer = new Customer(new Money(askForMoney()));
+        }
+    }
+
+    private void printOrder(){
+        for(Product p : order.getProducts()){
+            System.out.println(p);
+        }
+    }
+
+    private double askForMoney(){
+        System.out.println("How much money do you have?");
+        double money = keyboardInput.nextDouble();
+        return money;
     }
 
     private void printCommands(){
@@ -70,6 +93,7 @@ public class Main {
         System.out.println("4.Remove product ");
         System.out.println("5.Pay");
         System.out.println("6.Buy discount for points");
+        System.out.println("7.Show order");
     }
 
     private void addCustomer(){
@@ -83,11 +107,7 @@ public class Main {
     }
 
     private void addMembership(){
-        System.out.println("Do you want to be a member? Answer yes or no");
-        String choice = keyboardInput.nextLine();
-        if(choice.equalsIgnoreCase("yes")){
-            membership = new Membership(customer);
-        }
+        membership = new Membership(customer);
     }
 
     private void addOrder(){
@@ -165,6 +185,9 @@ public class Main {
                     break;
                 case "6":
                     buyDiscount();
+                    break;
+                case "7":
+                    printOrder();
                     break;
                 default:
                     System.out.println("Unknown command.");
