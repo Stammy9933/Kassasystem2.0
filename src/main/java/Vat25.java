@@ -1,4 +1,4 @@
-public class Vat25 extends Vat{
+public class Vat25 extends Vat {
 
     @Override
     public double getVat() {

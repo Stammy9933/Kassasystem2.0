@@ -5,24 +5,24 @@ public class ProductGroup {
     private ArrayList<Product> products = new ArrayList<>();
     private Vat vat;
 
-    public ProductGroup(String name, Vat vat){
+    public ProductGroup(String name, Vat vat) {
         this.name = name;
         this.vat = vat;
     }
 
-    public void addProduct(Product newProduct){
+    public void addProduct(Product newProduct) {
         products.add(newProduct);
     }
 
-    public void removeProduct(Product p){
+    public void removeProduct(Product p) {
         products.remove(p);
     }
 
-    public Vat getVat(){
+    public Vat getVat() {
         return vat;
     }
 
-    public ArrayList<Product> getProducts(){
+    public ArrayList<Product> getProducts() {
         return new ArrayList<Product>(products);
     }
 }
