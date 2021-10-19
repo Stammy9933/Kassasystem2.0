@@ -19,5 +19,6 @@ public class Checkout {
             order.getMembership().getPoints().addPoints(order.getTotalPrice());
             order.getMembership().addReceipt(newReceipt);
         }
+        newReceipt.printReceipt();
     }
 }
