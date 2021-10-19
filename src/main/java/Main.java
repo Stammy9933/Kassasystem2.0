@@ -53,7 +53,6 @@ public class Main {
     private void startUp() {
         System.out.println("Welcome!");
         askForMembership();
-        addMembership();
         addOrder();
         commandLoop();
     }
@@ -77,8 +76,7 @@ public class Main {
 
     private double askForMoney() {
         System.out.println("How much money do you have?");
-        double money = keyboardInput.nextDouble();
-        return money;
+        return keyboardInput.nextDouble();
     }
 
     private void printCommands() {
@@ -110,7 +108,7 @@ public class Main {
         if (membership != null) {
             order = new Order(membership);
         } else {
-            order = new Order();
+            order = new Order(customer);
         }
     }
 
