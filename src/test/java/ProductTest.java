@@ -29,7 +29,7 @@ class ProductTest {
     @Test
     void correctToString(){
         Product p = new Product("Kaffe", 5, DEFAULT_PRODUCT_GROUP);
-        assertEquals("Kaffe, 5.0", p.toString());
+        assertEquals("Kaffe, 5.3", p.toString());
     }
 
     @Test
