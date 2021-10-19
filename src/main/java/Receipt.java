@@ -38,4 +38,8 @@ public class Receipt {
 
         return sb.toString();
     }
+
+    public void printReceipt(){
+        System.out.println(receiptToString());
+    }
 }

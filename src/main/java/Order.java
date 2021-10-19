@@ -4,15 +4,18 @@ public class Order {
     private static final Membership NO_MEMBERSHIP = new Membership(new Customer("DEFAULT", "1234567890", new Money(10000)));
     private ArrayList<Product> products = new ArrayList<>();
     private Membership membership;
+    private Customer customer;
     private double totalPrice;
     private boolean isPaid;
 
 
     public Order(Membership membership) {
         this.membership = membership;
+        customer = membership.getCustomer();
     }
 
-    public Order() {
+    public Order(Customer customer) {
+        this.customer = customer;
         membership = NO_MEMBERSHIP;
     }
 
@@ -59,5 +62,9 @@ public class Order {
 
     public Membership getMembership() {
         return membership;
+    }
+
+    public Customer getCustomer(){
+        return customer;
     }
 }
