@@ -53,7 +53,6 @@ public class Main {
     private void startUp() {
         System.out.println("Welcome!");
         askForMembership();
-        addMembership();
         addOrder();
         commandLoop();
     }
