@@ -21,10 +21,4 @@ class VatCategoriesTest {
         Vat test = new Vat25();
         assertEquals(0.25, test.getVat());
     }
-
-
-
-
-
-
 }

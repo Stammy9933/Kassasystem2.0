@@ -6,9 +6,7 @@ public class Main {
     private Order order;
     private Membership membership;
     private Customer customer;
-    private ArrayList<Order> orders = new ArrayList<>();
-    private ArrayList<Customer> customers = new ArrayList<>();
-    private Scanner keyboardInput = new Scanner(System.in);
+    private final Scanner keyboardInput = new Scanner(System.in);
     private ArrayList<Product> products = new ArrayList<>();
 
     public static void main(String[] args) {
