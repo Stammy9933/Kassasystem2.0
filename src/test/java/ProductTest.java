@@ -45,5 +45,10 @@ class ProductTest {
         assertEquals(15.9, p.getPricePlusVat());
     }
 
+    @Test
+    void correctPriceWithDiscount() {
+        Product p = new Product("Korv", 15, DEFAULT_PRODUCT_GROUP, new PercentageDiscount(0.3));
+        assertEquals(11.13, p.getPricePlusVat());
+    }
 
 }
