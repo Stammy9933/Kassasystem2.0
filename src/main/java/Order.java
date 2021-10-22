@@ -1,7 +1,7 @@
 import java.util.ArrayList;
 
 public class Order {
-    private static final Membership NO_MEMBERSHIP = new Membership(new Customer("DEFAULT DEFAULT", "971010-1010", new Money(10000)));
+    private static final Membership NO_MEMBERSHIP = new Membership(new Customer("DEFAULT DEFAULT", "971010-1010", new Money(0)));
     private ArrayList<Product> products = new ArrayList<>();
     private Membership membership;
     private Customer customer;
@@ -27,7 +27,7 @@ public class Order {
         products.add(product);
     }
 
-    public void setTotalPrice() {
+    public void calculateTotalPrice() {
         for (Product p : products) {
             totalPrice += p.getPricePlusVat();
         }
@@ -52,7 +52,7 @@ public class Order {
         return new ArrayList<Product>(products);
     }
 
-    public void gotPaid() {
+    public void setAsPaid() {
         isPaid = true;
     }
 

@@ -121,7 +121,7 @@ public class Main {
                 product = p;
             }
         }
-        Scan scan = new Scan(product, order);
+        new Scan(product, order);
     }
 
     private void addDiscount() {

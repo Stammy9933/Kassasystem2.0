@@ -1,8 +1,9 @@
 import java.util.ArrayList;
+import java.util.HashSet;
 
 public class ProductGroup {
     private String name;
-    private ArrayList<Product> products = new ArrayList<>();
+    private HashSet<Product> products = new HashSet();
     private Vat vat;
 
     public ProductGroup(String name, Vat vat) {
