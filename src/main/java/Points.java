@@ -6,6 +6,9 @@ public class Points {
     }
 
     public void addPoints(double money) {
+        if(money <= 0) {
+            throw new IllegalArgumentException();
+        }
         amount += (int) money;
     }
 

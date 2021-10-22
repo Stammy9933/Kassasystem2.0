@@ -3,7 +3,7 @@ import java.util.ArrayList;
 public class Membership {
 
     private final StaticDiscount NO_DISCOUNT = new StaticDiscount(0, this);
-    private Customer customer;
+    private final Customer customer;
     private Points points = new Points();
     private StaticDiscount discount = NO_DISCOUNT;
     private ArrayList<Receipt> receipts = new ArrayList<>();
@@ -17,6 +17,9 @@ public class Membership {
     }
 
     public void buyStaticDiscount() {
+        if(discount.getDiscount() != 0){
+            throw new IllegalStateException("You already have a discount saved");
+        }
         StaticDiscount newStaticDiscount = new StaticDiscount((int) points.getAmount() / 1000, this);
         discount = newStaticDiscount;
         points.removePoints(points.getAmount());

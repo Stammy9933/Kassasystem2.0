@@ -55,7 +55,6 @@ public class Main {
     protected void startUp() {
         System.out.println("Welcome!");
         askForMembership();
-        addMembership();
         addOrder();
         commandLoop(" ", " ");
     }
@@ -79,8 +78,7 @@ public class Main {
 
     protected double askForMoney() {
         System.out.println("How much money do you have?");
-        double money = keyboardInput.nextDouble();
-        return money;
+        return keyboardInput.nextDouble();
     }
 
     protected void printCommands() {
@@ -112,7 +110,7 @@ public class Main {
         if (membership != null) {
             order = new Order(membership);
         } else {
-            order = new Order();
+            order = new Order(customer);
         }
     }
 

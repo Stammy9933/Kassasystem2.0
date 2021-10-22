@@ -1,16 +1,10 @@
 public class Checkout {
-    private Order order;
-    private Customer customer;
-
-    public Checkout(Order order, Customer customer) {
-        this.order = order;
-        this.customer = customer;
-        this.order.setTotalPrice();
-    }
+    private final Order order;
+    private final Customer customer;
 
     public Checkout(Order order) {
         this.order = order;
-        this.customer = order.getMembership().getCustomer();
+        this.customer = order.getCustomer();
         this.order.setTotalPrice();
     }
 
@@ -25,5 +19,6 @@ public class Checkout {
             order.getMembership().getPoints().addPoints(order.getTotalPrice());
             order.getMembership().addReceipt(newReceipt);
         }
+        newReceipt.printReceipt();
     }
 }

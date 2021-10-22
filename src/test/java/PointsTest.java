@@ -42,4 +42,12 @@ class PointsTest {
         test.removePoints(5.9);
         assertEquals(0, test.getAmount());
     }
+
+    @Test
+    void exceptionThrownWhenIncompatibleNumber() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            Points test = new Points();
+            test.addPoints(0);
+        });
+    }
 }
