@@ -4,14 +4,15 @@ public class Order {
     private static final Membership NO_MEMBERSHIP = new Membership(new Customer("DEFAULT DEFAULT", "971010-1010", new Money(0)));
     private ArrayList<Product> products = new ArrayList<>();
     private Membership membership;
-    private Customer customer;
     private double totalPrice;
+    private boolean discountUsed;
     private boolean isPaid;
+    private Customer customer;
+
 
 
     public Order(Membership membership) {
         this.membership = membership;
-        customer = membership.getCustomer();
     }
 
     public Order(Customer customer) {
@@ -42,10 +43,9 @@ public class Order {
     }
 
     public void addStaticDiscount(StaticDiscount discount) {
-        if (discount.getDiscount() > 0) {
             totalPrice -= discount.getDiscount();
             discount.getMembership().removeDiscount();
-        }
+            discountUsed = true;
     }
 
     public ArrayList<Product> getProductList() {
@@ -60,11 +60,25 @@ public class Order {
         return isPaid;
     }
 
+    public Customer getCustomer(){
+        return customer;
+    }
+
     public Membership getMembership() {
         return membership;
     }
 
-    public Customer getCustomer(){
-        return customer;
+    public boolean discountIsUsed() {
+        return discountUsed;
     }
+
+    public Product findProduct(String p) {
+        for(Product product : products) {
+            if(product.getName().equals(p)) {
+                return product;
+            }
+        }
+        return null;
+    }
+
 }

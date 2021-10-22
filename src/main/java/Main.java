@@ -14,7 +14,7 @@ public class Main {
         program.run();
     }
 
-    private void createProducts() {
+    protected void createProducts() {
         Vat12 vat12 = new Vat12();
         Vat6 vat6 = new Vat6();
         Vat25 vat25 = new Vat25();
@@ -38,48 +38,62 @@ public class Main {
         products.add(snus);
     }
 
-    private void showProducts() {
+    protected String showProducts() {
+        StringBuilder sb = new StringBuilder();
         for (Product p : products) {
-            System.out.println(p);
+            sb.append(p.toString()).append("\n");
         }
+        return sb.toString();
     }
 
-    public void run() {
+    protected void run() {
         createProducts();
         startUp();
 
     }
 
-    private void startUp() {
+    protected void startUp() {
         System.out.println("Welcome!");
-        askForMembership();
+        askForMembership("");
         addOrder();
-        commandLoop();
+        commandLoop("", "");
     }
 
-    private void askForMembership() {
+    protected void askForMembership(String testInput) {
         System.out.println("Do you have a membership? Answer yes or no");
         String choice = keyboardInput.nextLine();
         if (choice.equalsIgnoreCase("yes")) {
-            addCustomer();
+            addCustomer("", "", 0);
             addMembership();
         } else if (choice.equalsIgnoreCase("no")) { //If there's not a membership, create a empty customer with only the amount of brought money
-            customer = new Customer(new Money(askForMoney()));
+            customer = new Customer(new Money(askForMoney(0)));
         }
     }
 
-    private void printOrder() {
+    protected void printOrder() {
         for (Product p : order.getProducts()) {
             System.out.println(p);
         }
     }
 
-    private double askForMoney() {
+    protected ArrayList<Product> getProducts() {
+        return new ArrayList<Product>(products);
+    }
+
+    protected Order getOrder() {
+        return order;
+    }
+
+    protected Membership getMembership() {
+        return membership;
+    }
+
+    protected double askForMoney(double test) {
         System.out.println("How much money do you have?");
         return keyboardInput.nextDouble();
     }
 
-    private void printCommands() {
+    protected void printCommands() {
         System.out.println("The following commands exist. Please write the number of the command");
         System.out.println("1.Show products");
         System.out.println("2.Add product");
@@ -90,7 +104,7 @@ public class Main {
         System.out.println("7.Show order");
     }
 
-    private void addCustomer() {
+    protected void addCustomer(String testName, String testSSN, double testMoney) {
         System.out.println("What is your name?");
         String name = keyboardInput.nextLine();
         System.out.println("What is your social security number?");
@@ -100,11 +114,11 @@ public class Main {
         customer = new Customer(name, ssn, new Money(money));
     }
 
-    private void addMembership() {
+    protected void addMembership() {
         membership = new Membership(customer);
     }
 
-    private void addOrder() {
+    protected void addOrder() {
         if (membership != null) {
             order = new Order(membership);
         } else {
@@ -112,7 +126,7 @@ public class Main {
         }
     }
 
-    private void addProduct() {
+    protected void addProduct(String testInput) {
         System.out.println("What is the name of the product?");
         String productName = keyboardInput.nextLine().toLowerCase();
         Product product = null;
@@ -124,11 +138,11 @@ public class Main {
         new Scan(product, order);
     }
 
-    private void addDiscount() {
+    protected void addDiscount() {
         order.addStaticDiscount(membership.getDiscount());
     }
 
-    private void removeProduct() {
+    protected void removeProduct(String testInput) {
         System.out.println("What is the name of the product?");
         String productName = keyboardInput.nextLine().toLowerCase();
         Product product = null;
@@ -144,12 +158,12 @@ public class Main {
         }
     }
 
-    public void pay() {
+    protected void pay() {
         Checkout checkout = new Checkout(order);
         checkout.pay();
     }
 
-    public void buyDiscount() {
+    protected void buyDiscount() {
         membership.buyStaticDiscount();
         System.out.println("Your points are converted to a discount");
     }
@@ -158,7 +172,10 @@ public class Main {
         return keyboardInput.nextLine();
     }
 
-    private void commandLoop() {
+    protected void setCustomer(Customer newCustomer) {
+        customer = newCustomer;
+    }
+    protected void commandLoop(String firstTestInput, String secondTestInput) {
         String choice;
         do {
             System.out.println("Command?>");
@@ -168,13 +185,13 @@ public class Main {
                     showProducts();
                     break;
                 case "2":
-                    addProduct();
+                    addProduct("");
                     break;
                 case "3":
                     addDiscount();
                     break;
                 case "4":
-                    removeProduct();
+                    removeProduct("");
                     break;
                 case "5":
                     pay();
