@@ -7,7 +7,6 @@ class MainTest {
     Main m = new Main() {
         @Override
         protected void commandLoop(String first, String second) {
-            //do {
             switch (first) {
                 case "1":
                     m.showProducts();
@@ -35,8 +34,6 @@ class MainTest {
                     m.printCommands();
             }
         }
-        //  while (!first.equals("exit"));
-        //}
 
         @Override
         protected void addProduct(String testInput) {
@@ -67,19 +64,58 @@ class MainTest {
                 System.out.println("There is no product with that name.");
             }
         }
+
+        @Override
+        protected void askForMembership(String testInput) {
+            System.out.println("Do you have a membership? Answer yes or no");
+            if (testInput.equalsIgnoreCase("yes")) {
+                addCustomer("testName", "1010101010", 10000);
+                addMembership();
+            } else if (testInput.equalsIgnoreCase("no")) { //If there's not a membership, create a empty customer with only the amount of brought money
+                Customer customer = new Customer(new Money(askForMoney(10000)));
+                setCustomer(customer);
+            }
+        }
+
+        @Override
+        protected void addCustomer(String testInputName, String testInputSSN, double testInputMoney) {
+            System.out.println("What is your name?");
+            System.out.println("What is your social security number?");
+            System.out.println("How much money do you have?");
+            Customer customer = new Customer(testInputName, testInputSSN, new Money(testInputMoney));
+            setCustomer(customer);
+        }
+
+        @Override
+        protected double askForMoney(double testInput) {
+            System.out.println("How much money do you have?");
+            return testInput;
+        }
     };
+
+    @Test
+    void orderIsCorrectlyAdded() {
+        m.addOrder();
+        assertNotNull(m.getOrder());
+    }
+
+    @Test
+    void membershipIsCorrectlyAdded() {
+        m.addMembership();
+        assertNotNull(m.getMembership());
+    }
 
     @Test
     void commandLoopCaseOne() {
         m.createProducts();
         m.commandLoop("1", "");
-        assertEquals(m.showProducts(), "Coffee, " + 16.8 + "\n" +
+        assertEquals("Coffee, " + 16.8 + "\n" +
                 "Milk, " + 14.56 + "\n" +
                 "Ham, " + 25.0 + "\n" +
                 "Cheese, " + 37.5 + "\n" +
                 "Butter, " + 50.0 + "\n" +
                 "Loaf, " + 28.0 + "\n" +
-                "Snus, " + 5.3 + "\n");
+                "Snus, " + 5.3 + "\n", m.showProducts());
     }
 
     @Test
@@ -92,12 +128,12 @@ class MainTest {
 
     @Test
     void commandLoopCaseThree() {
-        m.addOrder();
         m.addMembership();
-        m.getOrder().getMembership().getPoints().addPoints(1000000);
+        m.addOrder();
+        m.getOrder().getMembership().getPoints().addPoints(100000);
         m.buyDiscount();
         m.commandLoop("3", "");
-        assertTrue(m.getOrder().discountIsUsed()); //Går aldrig in i ifstatementet i addstaticdiscount i order
+        assertTrue(m.getOrder().discountIsUsed());
     }
 
     @Test
@@ -111,6 +147,7 @@ class MainTest {
     @Test
     void commandLoopCaseFive() {
         m.createProducts();
+        m.addCustomer("testInput", "1010101010", 10000);
         m.addOrder();
         m.commandLoop("5", "");
         assertTrue(m.getOrder().isPaid());
@@ -119,17 +156,24 @@ class MainTest {
     @Test
     void commandLoopCaseSix() {
         m.createProducts();
-        m.addOrder();
         m.addMembership();
-        m.getOrder().getMembership().getPoints().addPoints(200);
+        m.addOrder();
+        m.getOrder().getMembership().getPoints().addPoints(1000);
         m.commandLoop("6", "");
-        assertNull(m.getOrder().getMembership().getDiscount());
+        assertTrue(m.getOrder().getMembership().getDiscount().getDiscount() > 0);
     }
 
     @Test
-    void commandLoopCaseSeven() { // Hur testa void metod?
+    void userIsAskedForMembershipAndSaysYes() {
         m.addOrder();
-        m.createProducts();
-        m.printOrder();
+        m.askForMembership("Yes");
+        assertNotNull(m.getMembership());
+    }
+
+    @Test
+    void userIsAskedForMembershipAndSaysNo() {
+        m.addOrder();
+        m.askForMembership("No");
+        assertNull(m.getMembership());
     }
 }

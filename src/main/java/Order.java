@@ -7,13 +7,16 @@ public class Order {
     private double totalPrice;
     private boolean discountUsed;
     private boolean isPaid;
+    private Customer customer;
+
 
 
     public Order(Membership membership) {
         this.membership = membership;
     }
 
-    public Order() {
+    public Order(Customer customer) {
+        this.customer = customer;
         membership = NO_MEMBERSHIP;
     }
 
@@ -40,12 +43,9 @@ public class Order {
     }
 
     public void addStaticDiscount(StaticDiscount discount) {
-        //discountUsed = true;
-        if (discount.getDiscount() > 0) {
             totalPrice -= discount.getDiscount();
             discount.getMembership().removeDiscount();
             discountUsed = true;
-        }
     }
 
     public ArrayList<Product> getProductList() {
@@ -58,6 +58,10 @@ public class Order {
 
     public boolean isPaid() {
         return isPaid;
+    }
+
+    public Customer getCustomer(){
+        return customer;
     }
 
     public Membership getMembership() {

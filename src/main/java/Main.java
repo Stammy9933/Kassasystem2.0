@@ -14,7 +14,7 @@ public class Main {
         program.run();
     }
 
-    protected void createProducts() {
+    protected void createProducts() { //KLAR----------------
         Vat12 vat12 = new Vat12();
         Vat6 vat6 = new Vat6();
         Vat25 vat25 = new Vat25();
@@ -38,7 +38,7 @@ public class Main {
         products.add(snus);
     }
 
-    protected String showProducts() {
+    protected String showProducts() { // KLAR --------------------
         StringBuilder sb = new StringBuilder();
         for (Product p : products) {
             sb.append(p.toString()).append("\n");
@@ -54,34 +54,34 @@ public class Main {
 
     protected void startUp() {
         System.out.println("Welcome!");
-        askForMembership();
+        askForMembership("");
         addOrder();
         commandLoop(" ", " ");
     }
 
-    protected void askForMembership() {
+    protected void askForMembership(String testInput) { // KLAR ---------------------
         System.out.println("Do you have a membership? Answer yes or no");
         String choice = keyboardInput.nextLine();
         if (choice.equalsIgnoreCase("yes")) {
-            addCustomer();
+            addCustomer("", "", 0);
             addMembership();
         } else if (choice.equalsIgnoreCase("no")) { //If there's not a membership, create a empty customer with only the amount of brought money
-            customer = new Customer(new Money(askForMoney()));
+            customer = new Customer(new Money(askForMoney(10000)));
         }
     }
 
-    protected void printOrder() {
+    protected void printOrder() { // KLAR -------------
         for (Product p : order.getProducts()) {
             System.out.println(p);
         }
     }
 
-    protected double askForMoney() {
+    protected double askForMoney(double testInput) { // KLAR --------
         System.out.println("How much money do you have?");
         return keyboardInput.nextDouble();
     }
 
-    protected void printCommands() {
+    protected void printCommands() { // KLAR ------------
         System.out.println("The following commands exist. Please write the number of the command");
         System.out.println("1.Show products");
         System.out.println("2.Add product");
@@ -92,7 +92,7 @@ public class Main {
         System.out.println("7.Show order");
     }
 
-    protected void addCustomer() {
+    protected void addCustomer(String testrInputName, String testInputSSN, double testInputMoney) { // KLAR ------
         System.out.println("What is your name?");
         String name = keyboardInput.nextLine();
         System.out.println("What is your social security number?");
@@ -102,11 +102,11 @@ public class Main {
         customer = new Customer(name, ssn, new Money(money));
     }
 
-    protected void addMembership() {
+    protected void addMembership() { // KLAR ---------
         membership = new Membership(customer);
     }
 
-    protected void addOrder() {
+    protected void addOrder() { // KLAR --------------
         if (membership != null) {
             order = new Order(membership);
         } else {
@@ -114,7 +114,7 @@ public class Main {
         }
     }
 
-    protected void addProduct(String testInput) {
+    protected void addProduct(String testInput) { // KLAR ------------
         System.out.println("What is the name of the product?");
         String productName = keyboardInput.nextLine().toLowerCase();
         Product product = null;
@@ -126,11 +126,11 @@ public class Main {
         Scan scan = new Scan(product, order);
     }
 
-    protected void addDiscount() {
+    protected void addDiscount() { //  KLAR ---------------
         order.addStaticDiscount(membership.getDiscount());
     }
 
-    protected void removeProduct(String testInput) {
+    protected void removeProduct(String testInput) { // KLAR ----------------
         System.out.println("What is the name of the product?");
         String productName = keyboardInput.nextLine().toLowerCase();
         Product product = null;
@@ -146,18 +146,26 @@ public class Main {
         }
     }
 
-    protected void pay() {
+    protected void pay() {  // KLAR ----------------
         Checkout checkout = new Checkout(order);
         checkout.pay();
     }
 
-    protected void buyDiscount() {
+    protected void buyDiscount() { // KLAR ------------
         membership.buyStaticDiscount();
         System.out.println("Your points are converted to a discount");
     }
 
+    protected void setCustomer(Customer newCustomer) { // KLAR _____----
+        customer = newCustomer;
+    }
+
     protected Customer getCustomer() {
         return customer;
+    }
+
+    protected Membership getMembership() {
+        return membership;
     }
 
     protected ArrayList<Product> getProducts() {
