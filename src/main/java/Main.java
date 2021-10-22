@@ -14,7 +14,7 @@ public class Main {
         program.run();
     }
 
-    private void createProducts() {
+    protected void createProducts() {
         Vat12 vat12 = new Vat12();
         Vat6 vat6 = new Vat6();
         Vat25 vat25 = new Vat25();
@@ -38,27 +38,29 @@ public class Main {
         products.add(snus);
     }
 
-    private void showProducts() {
+    protected String showProducts() {
+        StringBuilder sb = new StringBuilder();
         for (Product p : products) {
-            System.out.println(p);
+            sb.append(p.toString()).append("\n");
         }
+        String products = sb.toString();
+        return products;
     }
 
-    public void run() {
+    protected void run() {
         createProducts();
         startUp();
-
     }
 
-    private void startUp() {
+    protected void startUp() {
         System.out.println("Welcome!");
         askForMembership();
         addMembership();
         addOrder();
-        commandLoop();
+        commandLoop(" ", " ");
     }
 
-    private void askForMembership() {
+    protected void askForMembership() {
         System.out.println("Do you have a membership? Answer yes or no");
         String choice = keyboardInput.nextLine();
         if (choice.equalsIgnoreCase("yes")) {
@@ -69,19 +71,19 @@ public class Main {
         }
     }
 
-    private void printOrder() {
+    protected void printOrder() {
         for (Product p : order.getProducts()) {
             System.out.println(p);
         }
     }
 
-    private double askForMoney() {
+    protected double askForMoney() {
         System.out.println("How much money do you have?");
         double money = keyboardInput.nextDouble();
         return money;
     }
 
-    private void printCommands() {
+    protected void printCommands() {
         System.out.println("The following commands exist. Please write the number of the command");
         System.out.println("1.Show products");
         System.out.println("2.Add product");
@@ -92,7 +94,7 @@ public class Main {
         System.out.println("7.Show order");
     }
 
-    private void addCustomer() {
+    protected void addCustomer() {
         System.out.println("What is your name?");
         String name = keyboardInput.nextLine();
         System.out.println("What is your social security number?");
@@ -102,11 +104,11 @@ public class Main {
         customer = new Customer(name, ssn, new Money(money));
     }
 
-    private void addMembership() {
+    protected void addMembership() {
         membership = new Membership(customer);
     }
 
-    private void addOrder() {
+    protected void addOrder() {
         if (membership != null) {
             order = new Order(membership);
         } else {
@@ -114,7 +116,7 @@ public class Main {
         }
     }
 
-    private void addProduct() {
+    protected void addProduct(String testInput) {
         System.out.println("What is the name of the product?");
         String productName = keyboardInput.nextLine().toLowerCase();
         Product product = null;
@@ -126,11 +128,11 @@ public class Main {
         Scan scan = new Scan(product, order);
     }
 
-    private void addDiscount() {
+    protected void addDiscount() {
         order.addStaticDiscount(membership.getDiscount());
     }
 
-    private void removeProduct() {
+    protected void removeProduct(String testInput) {
         System.out.println("What is the name of the product?");
         String productName = keyboardInput.nextLine().toLowerCase();
         Product product = null;
@@ -146,33 +148,46 @@ public class Main {
         }
     }
 
-    public void pay() {
+    protected void pay() {
         Checkout checkout = new Checkout(order);
         checkout.pay();
     }
 
-    public void buyDiscount() {
+    protected void buyDiscount() {
         membership.buyStaticDiscount();
         System.out.println("Your points are converted to a discount");
     }
 
-    private void commandLoop() {
+    protected Customer getCustomer() {
+        return customer;
+    }
+
+    protected ArrayList<Product> getProducts() {
+        ArrayList<Product> newArr = new ArrayList<>(products);
+        return newArr;
+    }
+
+    protected Order getOrder() {
+        return order;
+    }
+
+    protected void commandLoop(String testInput, String två) {
         String choice;
         do {
             System.out.println("Command?>");
             choice = keyboardInput.nextLine();
             switch (choice) {
                 case "1":
-                    showProducts();
+                    System.out.println(showProducts());
                     break;
                 case "2":
-                    addProduct();
+                    addProduct(" ");
                     break;
                 case "3":
                     addDiscount();
                     break;
                 case "4":
-                    removeProduct();
+                    removeProduct(" ");
                     break;
                 case "5":
                     pay();
@@ -190,5 +205,4 @@ public class Main {
         }
         while (!choice.equals("exit"));
     }
-
 }

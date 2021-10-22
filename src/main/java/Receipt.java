@@ -17,11 +17,6 @@ public class Receipt {
         this.date = date;
     }
 
-
-    public Date getDate() {
-        return date;
-    }
-
     private String getDateFormat() {
         SimpleDateFormat formatter= new SimpleDateFormat("yyyy-MM-dd 'at' HH:mm:ss z");
         return formatter.format(date);

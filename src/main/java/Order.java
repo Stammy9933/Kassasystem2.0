@@ -5,6 +5,7 @@ public class Order {
     private ArrayList<Product> products = new ArrayList<>();
     private Membership membership;
     private double totalPrice;
+    private boolean discountUsed;
     private boolean isPaid;
 
 
@@ -39,9 +40,11 @@ public class Order {
     }
 
     public void addStaticDiscount(StaticDiscount discount) {
+        //discountUsed = true;
         if (discount.getDiscount() > 0) {
             totalPrice -= discount.getDiscount();
             discount.getMembership().removeDiscount();
+            discountUsed = true;
         }
     }
 
@@ -60,4 +63,18 @@ public class Order {
     public Membership getMembership() {
         return membership;
     }
+
+    public boolean discountIsUsed() {
+        return discountUsed;
+    }
+
+    public Product findProduct(String p) {
+        for(Product product : products) {
+            if(product.getName().equals(p)) {
+                return product;
+            }
+        }
+        return null;
+    }
+
 }

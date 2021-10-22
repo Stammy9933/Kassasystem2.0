@@ -5,6 +5,7 @@ import java.util.Date;
 import static org.junit.jupiter.api.Assertions.*;
 
 class ReceiptTest {
+
     @Test
     void receiptIsCorrectlyPrintedOut() {
         Product p1 = new Product("Milk", 5.0, new ProductGroup("Dairy", new Vat6()));
