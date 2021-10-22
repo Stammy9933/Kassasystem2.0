@@ -3,66 +3,91 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 class CustomerTest {
-    private static Money DEFAULT_MONEY = new Money(10000);
+    private static Money DEFAULT_MONEY = new Money(10000.0);
+    Customer c1 = new Customer("Leo Andersson", "971010-1010", DEFAULT_MONEY);
 
     @Test
-    void nameIsSetByConstructor(){
-        Customer c1 = new Customer("Leo Andersson", "9710184450", DEFAULT_MONEY);
+    void nameIsSetByConstructor() {
         assertEquals("Leo Andersson", c1.getName());
     }
 
     @Test
-    void exceptionThrownWhenNameIsNull(){
-        assertThrows(IllegalArgumentException.class, () -> new Customer(null, "9710184450", DEFAULT_MONEY));
+    void exceptionThrownWhenNameIsNull() {
+        assertThrows(NullPointerException.class, () -> new Customer(null, "971010-1010", DEFAULT_MONEY));
     }
 
     @Test
-    void exceptionThrownWhenNameIsEmpty(){
-        assertThrows(IllegalArgumentException.class, () -> new Customer("", "9710184450", DEFAULT_MONEY));
+    void exceptionThrownWhenNameIsEmpty() {
+        assertThrows(IllegalArgumentException.class, () -> new Customer("", "971010-1010", DEFAULT_MONEY));
     }
 
     @Test
-    void ssnIsSetByConstructor(){
-        Customer c1 = new Customer("Leo Andersson", "9710184450", DEFAULT_MONEY);
-        assertEquals("9710184450", c1.getSsn());
-    }
-    @Test
-    void exceptionThrownWhenSsnIsTooLong(){
-        assertThrows(IllegalArgumentException.class, () -> new Customer("Leo Andersson", "97101844505", DEFAULT_MONEY));
+    void exceptionThrownWhenNameIsShorterThanFiveCharacters() {
+        assertThrows(IllegalArgumentException.class, () -> new Customer("Bo A", "971010-1010", DEFAULT_MONEY));
     }
 
     @Test
-    void exceptionThrownWhenSsnIsTooShort(){
-        assertThrows(IllegalArgumentException.class, () -> new Customer("Leo Andersson", "971018445", DEFAULT_MONEY));
+    void exceptionThrownWhenNameContainsPeriod() {
+        assertThrows(IllegalArgumentException.class, () -> new Customer("Leo .Andersson", "971010-1010", DEFAULT_MONEY));
     }
 
     @Test
-    void addressIsSet(){
-        Customer c1 = new Customer("Leo Andersson", "9710184450", DEFAULT_MONEY);
-        c1.setAddress("Ekgatan 10");
-        assertEquals("Ekgatan 10", c1.getAddress());
+    void exceptionThrownWhenDoesNotContainWhitespace() {
+        assertThrows(IllegalArgumentException.class, () -> new Customer("LeoAndersson", "971010-1010", DEFAULT_MONEY));
     }
 
     @Test
-    void phoneNumberIsSet(){
-        Customer c1 = new Customer("Leo Andersson", "9710184450", DEFAULT_MONEY);
-        c1.setPhoneNumber("0704479933");
-        assertEquals("0704479933", c1.getPhoneNumber());
+    void exceptionThrownWhenNameContainsNumbers() {
+        assertThrows(IllegalArgumentException.class, () -> new Customer("L3o 4ndersson", "971010-1010", DEFAULT_MONEY));
     }
 
     @Test
-    void emailAddressIsSet(){
-        Customer c1 = new Customer("Leo Andersson", "9710184450", DEFAULT_MONEY);
-        c1.setEmailAddress("Leo.And@gmail.com");
-        assertEquals("Leo.And@gmail.com", c1.getEmailAddress());
+    void ssnIsSetByConstructor() {
+        assertEquals("971010-1010", c1.getSsn());
     }
 
     @Test
-    void toStringIsCorrect(){
-        Customer c1 = new Customer("Leo Andersson", "9710184450", DEFAULT_MONEY);
-        c1.setAddress("Ekgatan 10");
-        c1.setPhoneNumber("0704479933");
-        c1.setEmailAddress("Leo.And@gmail.com");
-        assertEquals("name: Leo Andersson, ssn: 9710184450, address: Ekgatan 10, phone number: 0704479933, email address: Leo.And@gmail.com", c1.toString());
+    void exceptionThrownWhenSSNIsNull() {
+        assertThrows(NullPointerException.class, () -> new Customer("Leo Andersson", null, DEFAULT_MONEY));
+    }
+
+    @Test
+    void exceptionThrownWhenSSNIsEmpty() {
+        assertThrows(IllegalArgumentException.class, () -> new Customer("Leo Andersson", "", DEFAULT_MONEY));
+    }
+
+    @Test
+    void exceptionThrownWhenIncorrectDateIsEntered() {
+        assertThrows(IllegalArgumentException.class, () -> new Customer("Leo Andersson", "971032-1010", DEFAULT_MONEY));
+    }
+
+    @Test
+    void exceptionThrownWhenSSNDoesNotStartWithSixNumbers() {
+        assertThrows(IllegalArgumentException.class, () -> new Customer("Leo Andersson", "9710-1010", DEFAULT_MONEY));
+    }
+
+    @Test
+    void exceptionThrownWhenSSNDoesNotEndWithFourNumbers() {
+        assertThrows(IllegalArgumentException.class, () -> new Customer("Leo Andersson", "971010-10", DEFAULT_MONEY));
+    }
+
+    @Test
+    void exceptionThrownWhenSSNDoesNotContainHyphen() {
+        assertThrows(IllegalArgumentException.class, () -> new Customer("Leo Andersson", "9710101010", DEFAULT_MONEY));
+    }
+
+    @Test
+    void moneyIsSet() {
+        assertEquals(10000.0, DEFAULT_MONEY.getAmount());
+    }
+
+    @Test
+    void exceptionThrownWhenMoneyIsNull() {
+        assertThrows(NullPointerException.class, () -> new Customer("Leo Andersson", "971010-1010", null));
+    }
+
+    @Test
+    void toStringIsCorrect() {
+        assertEquals("name: Leo Andersson, ssn: 971010-1010, money: 10000.0", c1.toString());
     }
 }

@@ -154,6 +154,10 @@ public class Main {
         System.out.println("Your points are converted to a discount");
     }
 
+    protected String askForInput(String testInput, String programOutput){
+        return keyboardInput.nextLine();
+    }
+
     private void commandLoop() {
         String choice;
         do {
@@ -188,5 +192,4 @@ public class Main {
         }
         while (!choice.equals("exit"));
     }
-
 }
