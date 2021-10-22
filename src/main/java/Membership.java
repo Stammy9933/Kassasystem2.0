@@ -17,6 +17,9 @@ public class Membership {
     }
 
     public void buyStaticDiscount() {
+        if(points.getAmount() < 1000){
+            throw new IllegalStateException("You have too few points to get a discount");
+        }
         if(discount.getDiscount() != 0){
             throw new IllegalStateException("You already have a discount saved");
         }

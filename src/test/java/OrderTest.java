@@ -14,7 +14,7 @@ class OrderTest {
 
     @Test
     void orderWithMembershipDiscountSucceeded(){
-        Membership ms = new Membership(new Customer("Ola", "0108153344", new Money(20)));
+        Membership ms = new Membership(new Customer("Name Name", "971010-6789", new Money(20)));
         Order o = new Order(ms);
         o.addProduct(new Product("Kaffe", 30, new ProductGroup("Dryck", new Vat6())));
         o.addStaticDiscount(new StaticDiscount(15, ms));

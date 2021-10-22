@@ -3,7 +3,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class StaticDiscountTest {
-  private static final Membership DEFAULT_MEMBERSHIP = new Membership(new Customer("Name", "0123456789", new Money(10000)));
+  private static final Membership DEFAULT_MEMBERSHIP = new Membership(new Customer("Name Name", "971010-6789", new Money(10000)));
 
   @Test
   void discountBelowZero(){
