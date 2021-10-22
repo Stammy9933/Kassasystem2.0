@@ -69,11 +69,11 @@ class MainTest {
         protected void askForMembership(String testInput) {
             System.out.println("Do you have a membership? Answer yes or no");
             if (testInput.equalsIgnoreCase("yes")) {
-                addCustomer("testName", "1010101010", 10000);
+                addCustomer("Test Input", "101010-1010", 10000);
                 addMembership();
             } else if (testInput.equalsIgnoreCase("no")) { //If there's not a membership, create a empty customer with only the amount of brought money
                 Customer customer = new Customer(new Money(askForMoney(10000)));
-                setCustomer(customer);
+                //setCustomer(customer);
             }
         }
 
@@ -147,7 +147,7 @@ class MainTest {
     @Test
     void commandLoopCaseFive() {
         m.createProducts();
-        m.addCustomer("testInput", "1010101010", 10000);
+        m.addCustomer("Test Input", "971010-1010", 10000);
         m.addOrder();
         m.commandLoop("5", "");
         assertTrue(m.getOrder().isPaid());

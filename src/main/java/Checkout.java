@@ -16,7 +16,7 @@ public class Checkout {
             customer.getMoney().subtractMoney(order.getTotalPrice());
             order.setAsPaid();
             Receipt newReceipt = new Receipt(order);
-            if (!order.getMembership().getCustomer().getName().equals("DEFAULT")) {
+            if (!order.getMembership().getCustomer().getName().equals("DEFAULT DEFAULT")) {
                 order.getMembership().getPoints().addPoints(order.getTotalPrice());
                 order.getMembership().addReceipt(newReceipt);
             }
