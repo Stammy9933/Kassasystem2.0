@@ -1,6 +1,4 @@
 public class Scan {
-    private Product product;
-    private Order order;
 
     public Scan(Product product, Order order) {
         if (product == null) {

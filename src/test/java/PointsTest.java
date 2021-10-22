@@ -27,7 +27,7 @@ class PointsTest {
 
     @Test
     void exceptionThrownWhenToMuchPointsIsRemoved() {
-        IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () -> {
+        assertThrows(IllegalArgumentException.class, () -> {
             Points test = new Points();
             test.removePoints(5);
         });

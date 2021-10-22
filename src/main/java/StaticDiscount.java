@@ -25,20 +25,4 @@ public class StaticDiscount {
     public String toString() {
         return "" + discount + " kr";
     }
-
-    @Override
-    public boolean equals(Object obj) {
-        if(obj instanceof StaticDiscount){
-            StaticDiscount other = (StaticDiscount) obj;
-            if(this.getDiscount() == other.getDiscount()){
-                return true;
-            }
-            else{
-                return false;
-            }
-        }
-        else{
-            return false;
-        }
-    }
 }
