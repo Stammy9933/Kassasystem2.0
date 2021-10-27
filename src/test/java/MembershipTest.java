@@ -9,7 +9,7 @@ class MembershipTest {
         Membership m = new Membership(new Customer(new Money(1000)));
         m.getPoints().addPoints(100000);
         m.buyStaticDiscount();
-        assertEquals(new StaticDiscount(100, m), m.getDiscount());
+        assertEquals(new StaticDiscount(100, m).getDiscount(), m.getDiscount().getDiscount());
     }
 
     @Test
