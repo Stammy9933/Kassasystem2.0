@@ -25,7 +25,7 @@ public class Receipt {
     public String receiptToString() {
         StringBuilder sb = new StringBuilder();
         sb.append(getDateFormat()).append("\n");
-        for (Product p : order.getProductList()) {
+        for (Product p : order.getProducts()) {
             sb.append(p.toString()).append("\n");
         }
         double roundedPrice =  Math.round(order.getTotalPrice()*100.0)/100.0;

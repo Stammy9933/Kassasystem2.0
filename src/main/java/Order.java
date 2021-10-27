@@ -49,10 +49,6 @@ public class Order {
             discountUsed = true;
     }
 
-    public ArrayList<Product> getProductList() {
-        return new ArrayList<Product>(products);
-    }
-
     public void setAsPaid() {
         isPaid = true;
     }
