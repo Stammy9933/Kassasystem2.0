@@ -37,5 +37,12 @@ class OrderTest {
         assertTrue(o.isPaid());
     }
 
-
+    @Test
+    void findProductFromOrder() {
+        Membership ms = new Membership(new Customer("Name LastName", "990811-3238", new Money(200)));
+        Order o = new Order(ms);
+        Product product = new Product("Lammbiff", 40, new ProductGroup("Kött", new Vat6()));
+        o.addProduct(product);
+        assertEquals(product, o.findProduct(product.getName()));
+    }
 }
