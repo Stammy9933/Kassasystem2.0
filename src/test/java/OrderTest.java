@@ -53,4 +53,14 @@ class OrderTest {
         Order o = new Order(ms);
         assertEquals(customer, o.getCustomer());
     }
+
+    @Test
+    void removeProductFromOrder() {
+        Membership ms = new Membership(new Customer("Name LastName", "990811-3238", new Money(200)));
+        Order o = new Order(ms);
+        Product product = new Product("Lammbiff", 40, new ProductGroup("Kött", new Vat6()));
+        o.addProduct(product);
+        o.removeProduct(product);
+        assertEquals(0, o.getProducts().size());
+    }
 }
