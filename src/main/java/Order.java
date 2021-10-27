@@ -13,6 +13,7 @@ public class Order {
 
     public Order(Membership membership) {
         this.membership = membership;
+        this.customer = membership.getCustomer();
     }
 
     public Order(Customer customer) {
