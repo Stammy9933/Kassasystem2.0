@@ -45,4 +45,12 @@ class OrderTest {
         o.addProduct(product);
         assertEquals(product, o.findProduct(product.getName()));
     }
+
+    @Test
+    void getCustomerFromOrder() {
+        Customer customer = new Customer("Name LastName", "920301-3828", new Money(100));
+        Membership ms = new Membership(customer);
+        Order o = new Order(ms);
+        assertEquals(customer, o.getCustomer());
+    }
 }
