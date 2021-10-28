@@ -7,22 +7,24 @@ public class ScanTest {
   private static final Order DEFAULT_ORDER = new Order(new Membership(new Customer("Name Name", "971010-6789", new Money(100.0, "SEK"))));
   @Test
   void successfulScan() {
-    new Scan(DEFAULT_PRODUCT, DEFAULT_ORDER);
+    Scan scan = new Scan(DEFAULT_ORDER);
+    scan.scanProduct(DEFAULT_PRODUCT);
     int productIndex = DEFAULT_ORDER.getProducts().indexOf(DEFAULT_PRODUCT);
     assertEquals(DEFAULT_PRODUCT, DEFAULT_ORDER.getProducts().get(productIndex));
   }
 
   @Test
   void noProductScan() {
+    Scan scan = new Scan(DEFAULT_ORDER);
     assertThrows(IllegalArgumentException.class, () -> {
-      new Scan(null, DEFAULT_ORDER);
+      scan.scanProduct(null);
     });
   }
 
   @Test
   void noOrderScan() {
     assertThrows(IllegalArgumentException.class, () -> {
-      new Scan(DEFAULT_PRODUCT, null);
+      new Scan(null);
     });
   }
 }

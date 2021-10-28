@@ -135,7 +135,8 @@ public class Main {
                 product = p;
             }
         }
-        new Scan(product, order);
+        Scan scan = new Scan(order);
+        scan.scanProduct(product);
     }
 
     protected void addDiscount() {

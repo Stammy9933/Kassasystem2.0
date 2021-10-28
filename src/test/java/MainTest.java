@@ -45,7 +45,8 @@ class MainTest {
                     product = p;
                 }
             }
-            Scan scan = new Scan(product, getOrder());
+            Scan scan = new Scan(getOrder());
+            scan.scanProduct(product);
         }
 
         @Override
