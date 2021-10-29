@@ -1,24 +1,35 @@
 import static org.junit.jupiter.api.Assertions.*;
 
-import org.junit.jupiter.api.Test;
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.util.Scanner;
 
+import org.junit.jupiter.api.Test;
 class MainTest {
 
     Main m = new Main() {
+        Scanner scanner = new Scanner(System.in);
+
         @Override
-        protected void commandLoop(String first, String second) {
-            switch (first) {
+        protected void commandLoop(String testInput) {
+            InputOutput inOut = new InputOutput(scanner);
+            InputStream in = new ByteArrayInputStream(testInput.getBytes());
+            System.setIn(in);
+            String input = inOut.getInput();
+            inOut.closeScanner();
+      
+            switch (input) {
                 case "1":
                     m.showProducts();
                     break;
                 case "2":
-                    m.addProduct(second);
+                    m.addProduct();
                     break;
                 case "3":
                     m.addDiscount();
                     break;
                 case "4":
-                    m.removeProduct("Second");
+                    m.removeProduct();
                     break;
                 case "5":
                     pay();
@@ -36,13 +47,22 @@ class MainTest {
         }
 
         @Override
-        protected void addProduct(String testInput) {
+        protected void addProduct() {
             System.out.println("What is the name of the product?");
-            testInput = testInput.toLowerCase();
+
+            String productName = "Coffee";
+            InputOutput inOut = new InputOutput(scanner);
+            InputStream in = new ByteArrayInputStream(productName.getBytes());
+            System.setIn(in);
+
+            String input = inOut.getInput();
+            inOut.closeScanner();
+
             Product product = null;
             for (Product p : getProducts()) {
-                if (p.getName().toLowerCase().equals(testInput)) {
+                if (p.getName().toLowerCase().equals(input.toLowerCase())) {
                     product = p;
+                    break;
                 }
             }
             Scan scan = new Scan(getOrder());
@@ -50,13 +70,22 @@ class MainTest {
         }
 
         @Override
-        protected void removeProduct(String testInput) {
+        protected void removeProduct() {
             System.out.println("What is the name of the product?");
-            testInput = testInput.toLowerCase();
+
+            String productName = "Coffee";
+            InputOutput inOut = new InputOutput(scanner);
+            InputStream in = new ByteArrayInputStream(productName.getBytes());
+            System.setIn(in);
+
+            String input = inOut.getInput();
+            inOut.closeScanner();
+
             Product product = null;
             for (Product p : m.getProducts()) {
-                if (p.getName().toLowerCase().equals(testInput)) {
+                if (p.getName().toLowerCase().equals(input.toLowerCase())) {
                     product = p;
+                    break;
                 }
             }
             if (product != null) {
@@ -67,30 +96,87 @@ class MainTest {
         }
 
         @Override
-        protected void askForMembership(String testInput) {
+        protected void askForMembership() {
             System.out.println("Do you have a membership? Answer yes or no");
-            if (testInput.equalsIgnoreCase("yes")) {
-                addCustomer("Test Input", "101010-1010", 10000);
+
+            String answer = "yes";
+            InputOutput inOut = new InputOutput(scanner);
+            InputStream in = new ByteArrayInputStream(answer.getBytes());
+            System.setIn(in);
+
+            String input = inOut.getInput();
+            inOut.closeScanner();
+
+            if (input.equalsIgnoreCase("yes")) {
+                addCustomer();
                 addMembership();
-            } else if (testInput.equalsIgnoreCase("no")) { //If there's not a membership, create a empty customer with only the amount of brought money
-                Customer customer = new Customer(new Money(askForMoney(10000)));
-                //setCustomer(customer);
+            } else if (input.equalsIgnoreCase("no")) { //If there's not a membership, create a empty customer with only the amount of brought money
+                new Customer(new Money(askForMoney()));
             }
         }
 
         @Override
-        protected void addCustomer(String testInputName, String testInputSSN, double testInputMoney) {
+        protected void askForMembershipNo() {
+            System.out.println("Do you have a membership? Answer yes or no");
+
+            String answer = "no";
+            InputOutput inOut = new InputOutput(scanner);
+            InputStream in = new ByteArrayInputStream(answer.getBytes());
+            System.setIn(in);
+
+            String input = inOut.getInput();
+            inOut.closeScanner();
+
+            if (input.equalsIgnoreCase("yes")) {
+                addCustomer();
+                addMembership();
+            } 
+
+            if (input.equalsIgnoreCase("no")) { //If there's not a membership, create a empty customer with only the amount of brought money
+                new Customer(new Money(askForMoney()));
+            }
+        }
+
+        @Override
+        protected void addCustomer() {
+            String name = "Jane Doe";
+            String ssn = "101010-1010";
+            String money = "10000";
+
             System.out.println("What is your name?");
+            InputOutput inOut = new InputOutput(scanner);
+            InputStream inName = new ByteArrayInputStream(name.getBytes());
+            System.setIn(inName);
+            String nameInput = inOut.getInput();
+
             System.out.println("What is your social security number?");
+            InputStream inSSN = new ByteArrayInputStream(ssn.getBytes());
+            System.setIn(inSSN);
+            String ssnInput = inOut.getInput();
+
             System.out.println("How much money do you have?");
-            Customer customer = new Customer(testInputName, testInputSSN, new Money(testInputMoney));
+            InputStream inMoney = new ByteArrayInputStream(money.getBytes());
+            System.setIn(inMoney);
+            String moneyInput = inOut.getInput();
+
+            Customer customer = new Customer(nameInput, ssnInput, new Money(Integer.parseInt(moneyInput)));
             setCustomer(customer);
         }
 
         @Override
-        protected double askForMoney(double testInput) {
+        protected double askForMoney() {
+            String money = "100";
             System.out.println("How much money do you have?");
-            return testInput;
+
+            InputOutput inOut = new InputOutput(scanner);
+            InputStream in = new ByteArrayInputStream(money.getBytes());
+            System.setIn(in);
+            
+            String input = inOut.getInput();
+
+            inOut.closeScanner();
+
+            return Double.parseDouble(input);
         }
     };
 
@@ -109,7 +195,7 @@ class MainTest {
     @Test
     void commandLoopCaseOne() {
         m.createProducts();
-        m.commandLoop("1", "");
+        m.commandLoop("1");
         assertEquals("Coffee, " + 16.8 + "\n" +
                 "Milk, " + 14.56 + "\n" +
                 "Ham, " + 25.0 + "\n" +
@@ -123,8 +209,8 @@ class MainTest {
     void commandLoopCaseTwo() {
         m.createProducts();
         m.addOrder();
-        m.commandLoop("2", "Milk");
-        assertTrue(m.getOrder().getProducts().contains(m.getOrder().findProduct("Milk")));
+        m.commandLoop("2");
+        assertTrue(m.getOrder().getProducts().contains(m.getOrder().findProduct("Coffee")));
     }
 
     @Test
@@ -133,7 +219,7 @@ class MainTest {
         m.addOrder();
         m.getOrder().getMembership().getPoints().addPoints(100000);
         m.buyDiscount();
-        m.commandLoop("3", "");
+        m.commandLoop("3");
         assertTrue(m.getOrder().discountIsUsed());
     }
 
@@ -141,16 +227,16 @@ class MainTest {
     void commandLoopCaseFour() {
         m.createProducts();
         m.addOrder();
-        m.commandLoop("4", "Milk");
-        assertFalse(m.getOrder().getProducts().contains(m.getOrder().findProduct("Milk")));
+        m.commandLoop("4");
+        assertFalse(m.getOrder().getProducts().contains(m.getOrder().findProduct("Coffee")));
     }
 
     @Test
     void commandLoopCaseFive() {
         m.createProducts();
-        m.addCustomer("Test Input", "971010-1010", 10000);
+        m.addCustomer();
         m.addOrder();
-        m.commandLoop("5", "");
+        m.commandLoop("5");
         assertTrue(m.getOrder().isPaid());
     }
 
@@ -160,21 +246,21 @@ class MainTest {
         m.addMembership();
         m.addOrder();
         m.getOrder().getMembership().getPoints().addPoints(1000);
-        m.commandLoop("6", "");
+        m.commandLoop("6");
         assertTrue(m.getOrder().getMembership().getDiscount().getDiscount() > 0);
     }
 
     @Test
     void userIsAskedForMembershipAndSaysYes() {
         m.addOrder();
-        m.askForMembership("Yes");
+        m.askForMembership();
         assertNotNull(m.getMembership());
     }
 
     @Test
     void userIsAskedForMembershipAndSaysNo() {
         m.addOrder();
-        m.askForMembership("No");
+        m.askForMembershipNo();
         assertNull(m.getMembership());
     }
 }
