@@ -1,3 +1,7 @@
+import java.io.BufferedInputStream;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -6,8 +10,16 @@ public class Main {
     private Order order;
     private Membership membership;
     private Customer customer;
-    private final Scanner keyboardInput = new Scanner(System.in);
+    private Scanner keyboardInput;
     private ArrayList<Product> products = new ArrayList<>();
+
+    public Main() {
+        this.keyboardInput = new Scanner(System.in);
+    }
+
+    public Main(InputStream in) {
+        this.keyboardInput = new Scanner(in);
+    }
 
     public static void main(String[] args) {
         Main program = new Main();
@@ -43,20 +55,20 @@ public class Main {
         for (Product p : products) {
             sb.append(p.toString()).append("\n");
         }
+        System.out.println(sb.toString());
         return sb.toString();
     }
 
     protected void run() {
         createProducts();
         startUp();
-
     }
 
     protected void startUp() {
         System.out.println("Welcome!");
         askForMembership();
         addOrder();
-        commandLoop("");
+        commandLoop();
     }
 
     protected void askForMembership() {
@@ -67,6 +79,8 @@ public class Main {
             addMembership();
         } else if (choice.equalsIgnoreCase("no")) { //If there's not a membership, create a empty customer with only the amount of brought money
             customer = new Customer(new Money(askForMoney()));
+        } else {
+            System.out.println("Not a valid answer");
         }
     }
 
@@ -137,6 +151,7 @@ public class Main {
         }
         Scan scan = new Scan(order);
         scan.scanProduct(product);
+        System.out.println("Product has been added");
     }
 
     protected void addDiscount() {
@@ -176,11 +191,14 @@ public class Main {
     protected void setCustomer(Customer newCustomer) {
         customer = newCustomer;
     }
-    protected void commandLoop(String testInput) {
-        String choice;
-        do {
+
+    protected void commandLoop() {
+        printCommands();
+        boolean running = true;
+        while (running) {
             System.out.println("Command?>");
-            choice = keyboardInput.nextLine();
+            String choice = keyboardInput.next();
+            keyboardInput.nextLine();
             switch (choice) {
                 case "1":
                     showProducts();
@@ -203,11 +221,16 @@ public class Main {
                 case "7":
                     printOrder();
                     break;
+                case "0":
+                    System.out.println("Exiting program");
+                    running = false;
+                    break;
                 default:
                     System.out.println("Unknown command.");
                     printCommands();
+                    break;
             }
         }
-        while (!choice.equals("exit"));
+        keyboardInput.close();
     }
 }

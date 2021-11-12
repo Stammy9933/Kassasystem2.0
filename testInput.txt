@@ -1,0 +1,27 @@
+
+A
+1
+B
+2,Coffee
+C
+3
+D
+4,Coffee
+E
+5,Test Input,971010-1010,10000
+F
+6
+G
+yes
+H
+no
+
+
+
+
+
+
+
+
+
+

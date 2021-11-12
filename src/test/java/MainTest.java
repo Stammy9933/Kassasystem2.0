@@ -1,201 +1,98 @@
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.Scanner;
 
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+
 class MainTest {
+    String[] stringArr;
+    static InputStream sysIn;
+    InputStream iStream;
+    FileRead fReader = new FileRead();
 
-    Main m = new Main() {
-        Scanner scanner = new Scanner(System.in);
+    @BeforeAll
+    static void saveSysIn() {
+        sysIn = System.in;
 
-        @Override
-        protected void commandLoop(String testInput) {
-            InputOutput inOut = new InputOutput(scanner);
-            InputStream in = new ByteArrayInputStream(testInput.getBytes());
-            System.setIn(in);
-            String input = inOut.getInput();
-            inOut.closeScanner();
-      
-            switch (input) {
-                case "1":
-                    m.showProducts();
-                    break;
-                case "2":
-                    m.addProduct();
-                    break;
-                case "3":
-                    m.addDiscount();
-                    break;
-                case "4":
-                    m.removeProduct();
-                    break;
-                case "5":
-                    pay();
-                    break;
-                case "6":
-                    buyDiscount();
-                    break;
-                case "7":
-                    m.printOrder();
-                    break;
-                default:
-                    System.out.println("Unknown command.");
-                    m.printCommands();
-            }
+        //scanner = new Scanner(System.in);
+        //inOut = new InputOutput(System.in);
+    }
+
+    @AfterEach
+    void restoreSysIn() {
+        System.setIn(sysIn);
+    }
+
+    // @AfterAll
+    // void closeScanner() {
+    //     scanner.close();
+    // }
+
+    InputStream createStream(String fileInput) {
+        String input = "";
+        try {
+            input = fReader.readFile("testInput.txt", fileInput);
+        } catch (IOException e) {
+            e.getMessage();
+        }
+        InputStream in = new ByteArrayInputStream(input.getBytes());
+        iStream = new BufferedInputStream(in);
+        System.setIn(iStream);
+        return iStream;
+    }
+
+    Main m;
+
+    String[] input(String fileInput) {
+        String input = "";
+        try {
+            input = fReader.readFile("testInput.txt", fileInput);
+        } catch (IOException e) {
+            e.getMessage();
         }
 
-        @Override
-        protected void addProduct() {
-            System.out.println("What is the name of the product?");
-
-            String productName = "Coffee";
-            InputOutput inOut = new InputOutput(scanner);
-            InputStream in = new ByteArrayInputStream(productName.getBytes());
-            System.setIn(in);
-
-            String input = inOut.getInput();
-            inOut.closeScanner();
-
-            Product product = null;
-            for (Product p : getProducts()) {
-                if (p.getName().toLowerCase().equals(input.toLowerCase())) {
-                    product = p;
-                    break;
-                }
-            }
-            Scan scan = new Scan(getOrder());
-            scan.scanProduct(product);
+        if (input.contains(",")) {
+            stringArr = input.split(",");
+            return stringArr;
+        } else {
+            stringArr = new String[1];
+            stringArr[0] = input;
+            return stringArr;
         }
-
-        @Override
-        protected void removeProduct() {
-            System.out.println("What is the name of the product?");
-
-            String productName = "Coffee";
-            InputOutput inOut = new InputOutput(scanner);
-            InputStream in = new ByteArrayInputStream(productName.getBytes());
-            System.setIn(in);
-
-            String input = inOut.getInput();
-            inOut.closeScanner();
-
-            Product product = null;
-            for (Product p : m.getProducts()) {
-                if (p.getName().toLowerCase().equals(input.toLowerCase())) {
-                    product = p;
-                    break;
-                }
-            }
-            if (product != null) {
-                getOrder().removeProduct(product);
-            } else {
-                System.out.println("There is no product with that name.");
-            }
-        }
-
-        @Override
-        protected void askForMembership() {
-            System.out.println("Do you have a membership? Answer yes or no");
-
-            String answer = "yes";
-            InputOutput inOut = new InputOutput(scanner);
-            InputStream in = new ByteArrayInputStream(answer.getBytes());
-            System.setIn(in);
-
-            String input = inOut.getInput();
-            inOut.closeScanner();
-
-            if (input.equalsIgnoreCase("yes")) {
-                addCustomer();
-                addMembership();
-            } else if (input.equalsIgnoreCase("no")) { //If there's not a membership, create a empty customer with only the amount of brought money
-                new Customer(new Money(askForMoney()));
-            }
-        }
-
-        @Override
-        protected void askForMembershipNo() {
-            System.out.println("Do you have a membership? Answer yes or no");
-
-            String answer = "no";
-            InputOutput inOut = new InputOutput(scanner);
-            InputStream in = new ByteArrayInputStream(answer.getBytes());
-            System.setIn(in);
-
-            String input = inOut.getInput();
-            inOut.closeScanner();
-
-            if (input.equalsIgnoreCase("yes")) {
-                addCustomer();
-                addMembership();
-            } 
-
-            if (input.equalsIgnoreCase("no")) { //If there's not a membership, create a empty customer with only the amount of brought money
-                new Customer(new Money(askForMoney()));
-            }
-        }
-
-        @Override
-        protected void addCustomer() {
-            String name = "Jane Doe";
-            String ssn = "101010-1010";
-            String money = "10000";
-
-            System.out.println("What is your name?");
-            InputOutput inOut = new InputOutput(scanner);
-            InputStream inName = new ByteArrayInputStream(name.getBytes());
-            System.setIn(inName);
-            String nameInput = inOut.getInput();
-
-            System.out.println("What is your social security number?");
-            InputStream inSSN = new ByteArrayInputStream(ssn.getBytes());
-            System.setIn(inSSN);
-            String ssnInput = inOut.getInput();
-
-            System.out.println("How much money do you have?");
-            InputStream inMoney = new ByteArrayInputStream(money.getBytes());
-            System.setIn(inMoney);
-            String moneyInput = inOut.getInput();
-
-            Customer customer = new Customer(nameInput, ssnInput, new Money(Integer.parseInt(moneyInput)));
-            setCustomer(customer);
-        }
-
-        @Override
-        protected double askForMoney() {
-            String money = "100";
-            System.out.println("How much money do you have?");
-
-            InputOutput inOut = new InputOutput(scanner);
-            InputStream in = new ByteArrayInputStream(money.getBytes());
-            System.setIn(in);
-            
-            String input = inOut.getInput();
-
-            inOut.closeScanner();
-
-            return Double.parseDouble(input);
-        }
-    };
+       /* InputStream in = new ByteArrayInputStream(input.getBytes());
+        iStream = new BufferedInputStream(in);
+        System.setIn(iStream);
+        m = new Main(iStream); */
+    }
 
     @Test
     void orderIsCorrectlyAdded() {
+        m = new Main();
         m.addOrder();
         assertNotNull(m.getOrder());
     }
 
     @Test
     void membershipIsCorrectlyAdded() {
+        m = new Main();
         m.addMembership();
         assertNotNull(m.getMembership());
     }
 
     @Test
     void commandLoopCaseOne() {
+        String[] inputs = input("A");
+        InputStream in = createStream(inputs[0]);
+        m = new Main(in);
+
         m.createProducts();
-        m.commandLoop("1");
         assertEquals("Coffee, " + 16.8 + "\n" +
                 "Milk, " + 14.56 + "\n" +
                 "Ham, " + 25.0 + "\n" +
@@ -207,51 +104,64 @@ class MainTest {
 
     @Test
     void commandLoopCaseTwo() {
+        input("B");
         m.createProducts();
         m.addOrder();
-        m.commandLoop("2");
         assertTrue(m.getOrder().getProducts().contains(m.getOrder().findProduct("Coffee")));
     }
 
     @Test
     void commandLoopCaseThree() {
+        String[] inputs = input("C");
+        InputStream in = createStream(inputs[0]);
+        m = new Main(in);
         m.addMembership();
         m.addOrder();
         m.getOrder().getMembership().getPoints().addPoints(100000);
         m.buyDiscount();
-        m.commandLoop("3");
         assertTrue(m.getOrder().discountIsUsed());
     }
 
     @Test
     void commandLoopCaseFour() {
+        input("D");
         m.createProducts();
         m.addOrder();
-        m.commandLoop("4");
         assertFalse(m.getOrder().getProducts().contains(m.getOrder().findProduct("Coffee")));
     }
 
     @Test
     void commandLoopCaseFive() {
+        String[] inputs = input("E");
+        InputStream inOne = createStream(inputs[0]);
+        InputStream inTwo = createStream(inputs[1]);
+        InputStream inThree = createStream(inputs[2]);
+        m = new Main(inOne);
+        m = new Main(inTwo);
+        m = new Main(inThree);
         m.createProducts();
         m.addCustomer();
         m.addOrder();
-        m.commandLoop("5");
         assertTrue(m.getOrder().isPaid());
     }
 
     @Test
     void commandLoopCaseSix() {
+        String[] inputs = input("F");
+        InputStream in = createStream(inputs[0]);
+        m = new Main(in);
         m.createProducts();
         m.addMembership();
         m.addOrder();
         m.getOrder().getMembership().getPoints().addPoints(1000);
-        m.commandLoop("6");
         assertTrue(m.getOrder().getMembership().getDiscount().getDiscount() > 0);
     }
 
     @Test
     void userIsAskedForMembershipAndSaysYes() {
+        String[] inputs = input("G");
+        InputStream in = createStream(inputs[0]);
+        m = new Main(in);
         m.addOrder();
         m.askForMembership();
         assertNotNull(m.getMembership());
@@ -259,8 +169,11 @@ class MainTest {
 
     @Test
     void userIsAskedForMembershipAndSaysNo() {
+        String[] inputs = input("H");
+        InputStream in = createStream(inputs[0]);
+        m = new Main(in);
         m.addOrder();
         m.askForMembershipNo();
         assertNull(m.getMembership());
     }
-}
+};
