@@ -1,7 +1,5 @@
-import java.io.BufferedInputStream;
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.io.InputStream;
+import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -12,6 +10,7 @@ public class Main {
     private Customer customer;
     private Scanner keyboardInput;
     private ArrayList<Product> products = new ArrayList<>();
+
 
     public Main() {
         this.keyboardInput = new Scanner(System.in);
@@ -66,6 +65,7 @@ public class Main {
 
     protected void startUp() {
         System.out.println("Welcome!");
+        addCustomer();
         askForMembership();
         addOrder();
         commandLoop();
@@ -75,7 +75,6 @@ public class Main {
         System.out.println("Do you have a membership? Answer yes or no");
         String choice = keyboardInput.nextLine();
         if (choice.equalsIgnoreCase("yes")) {
-            addCustomer();
             addMembership();
         } else if (choice.equalsIgnoreCase("no")) { //If there's not a membership, create a empty customer with only the amount of brought money
             customer = new Customer(new Money(askForMoney()));
@@ -158,10 +157,6 @@ public class Main {
         order.addStaticDiscount(membership.getDiscount());
     }
 
-    protected void askForMembershipNo() {
-        System.out.println("Do you want a membership?");
-    }
-
     protected void removeProduct() {
         System.out.println("What is the name of the product?");
         String productName = keyboardInput.nextLine().toLowerCase();
@@ -194,11 +189,10 @@ public class Main {
 
     protected void commandLoop() {
         printCommands();
-        boolean running = true;
-        while (running) {
+        String choice = "";
+        while (!choice.equals("0")) {
             System.out.println("Command?>");
-            String choice = keyboardInput.next();
-            keyboardInput.nextLine();
+            choice = keyboardInput.nextLine();
             switch (choice) {
                 case "1":
                     showProducts();
@@ -223,7 +217,6 @@ public class Main {
                     break;
                 case "0":
                     System.out.println("Exiting program");
-                    running = false;
                     break;
                 default:
                     System.out.println("Unknown command.");

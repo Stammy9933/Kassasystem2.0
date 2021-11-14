@@ -2,75 +2,43 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
+import java.io.*;
 import java.io.InputStream;
-import java.util.Scanner;
+import java.io.PrintStream;
 
-import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 class MainTest {
+    final PrintStream standardOut = System.out;
+    final ByteArrayOutputStream outputStreamCaptor = new ByteArrayOutputStream();
     String[] stringArr;
     static InputStream sysIn;
+    static PrintStream stdOut;
     InputStream iStream;
     FileRead fReader = new FileRead();
 
     @BeforeAll
     static void saveSysIn() {
         sysIn = System.in;
-
-        //scanner = new Scanner(System.in);
-        //inOut = new InputOutput(System.in);
+        stdOut = System.out;
     }
 
     @AfterEach
     void restoreSysIn() {
         System.setIn(sysIn);
+        System.setOut(stdOut);
     }
 
-    // @AfterAll
-    // void closeScanner() {
-    //     scanner.close();
-    // }
-
     InputStream createStream(String fileInput) {
-        String input = "";
-        try {
-            input = fReader.readFile("testInput.txt", fileInput);
-        } catch (IOException e) {
-            e.getMessage();
-        }
-        InputStream in = new ByteArrayInputStream(input.getBytes());
+        InputStream in = new ByteArrayInputStream(fileInput.getBytes());
         iStream = new BufferedInputStream(in);
         System.setIn(iStream);
         return iStream;
     }
 
     Main m;
-
-    String[] input(String fileInput) {
-        String input = "";
-        try {
-            input = fReader.readFile("testInput.txt", fileInput);
-        } catch (IOException e) {
-            e.getMessage();
-        }
-
-        if (input.contains(",")) {
-            stringArr = input.split(",");
-            return stringArr;
-        } else {
-            stringArr = new String[1];
-            stringArr[0] = input;
-            return stringArr;
-        }
-       /* InputStream in = new ByteArrayInputStream(input.getBytes());
-        iStream = new BufferedInputStream(in);
-        System.setIn(iStream);
-        m = new Main(iStream); */
-    }
 
     @Test
     void orderIsCorrectlyAdded() {
@@ -88,11 +56,9 @@ class MainTest {
 
     @Test
     void commandLoopCaseOne() {
-        String[] inputs = input("A");
-        InputStream in = createStream(inputs[0]);
-        m = new Main(in);
-
+        m = new Main();
         m.createProducts();
+        
         assertEquals("Coffee, " + 16.8 + "\n" +
                 "Milk, " + 14.56 + "\n" +
                 "Ham, " + 25.0 + "\n" +
@@ -104,76 +70,88 @@ class MainTest {
 
     @Test
     void commandLoopCaseTwo() {
-        input("B");
-        m.createProducts();
+        InputStream in = createStream("Coffee");
+        m = new Main(in);
         m.addOrder();
+        m.createProducts();
+        m.addProduct();
+        
         assertTrue(m.getOrder().getProducts().contains(m.getOrder().findProduct("Coffee")));
     }
 
     @Test
     void commandLoopCaseThree() {
-        String[] inputs = input("C");
-        InputStream in = createStream(inputs[0]);
-        m = new Main(in);
+        m = new Main();
+
         m.addMembership();
         m.addOrder();
         m.getOrder().getMembership().getPoints().addPoints(100000);
-        m.buyDiscount();
+        m.addDiscount();
         assertTrue(m.getOrder().discountIsUsed());
     }
 
     @Test
     void commandLoopCaseFour() {
-        input("D");
+        InputStream in = createStream("Coffee");
+        m = new Main(in);
+
         m.createProducts();
         m.addOrder();
+        m.removeProduct();
         assertFalse(m.getOrder().getProducts().contains(m.getOrder().findProduct("Coffee")));
     }
 
     @Test
     void commandLoopCaseFive() {
-        String[] inputs = input("E");
-        InputStream inOne = createStream(inputs[0]);
-        InputStream inTwo = createStream(inputs[1]);
-        InputStream inThree = createStream(inputs[2]);
+        InputStream inOne = createStream("F");
         m = new Main(inOne);
-        m = new Main(inTwo);
-        m = new Main(inThree);
         m.createProducts();
-        m.addCustomer();
+        Customer customer = new Customer("Jane doe", "940910-0940", new Money(10000.0));
+        m.setCustomer(customer);
         m.addOrder();
+        m.pay();
         assertTrue(m.getOrder().isPaid());
     }
 
     @Test
     void commandLoopCaseSix() {
-        String[] inputs = input("F");
-        InputStream in = createStream(inputs[0]);
-        m = new Main(in);
+        m = new Main();
         m.createProducts();
         m.addMembership();
         m.addOrder();
         m.getOrder().getMembership().getPoints().addPoints(1000);
+        m.buyDiscount();
         assertTrue(m.getOrder().getMembership().getDiscount().getDiscount() > 0);
     }
 
     @Test
     void userIsAskedForMembershipAndSaysYes() {
-        String[] inputs = input("G");
-        InputStream in = createStream(inputs[0]);
+        InputStream in = createStream("yes");
         m = new Main(in);
         m.addOrder();
+        Customer customer = new Customer("Jane doe", "940910-0940", new Money(10000.0));
+        m.setCustomer(customer);
         m.askForMembership();
         assertNotNull(m.getMembership());
     }
 
     @Test
     void userIsAskedForMembershipAndSaysNo() {
-        String[] inputs = input("H");
-        InputStream in = createStream(inputs[0]);
+        InputStream in = createStream("1000.0");
         m = new Main(in);
-        m.addOrder();
-        m.askForMembershipNo();
-        assertNull(m.getMembership());
+        Customer customer = new Customer(new Money(m.askForMoney()));
+        m.setCustomer(customer);
+        assertEquals(1000.0, customer.getMoney().getAmount());
+    }
+
+    @Test
+    void exitCommandLoop() {
+        InputStream in = createStream("0");
+        m = new Main(in);
+        System.setOut(new PrintStream(outputStreamCaptor));
+
+        m.commandLoop();
+
+        assertEquals("Exiting program", outputStreamCaptor.toString().trim().substring(187));
     }
 };
