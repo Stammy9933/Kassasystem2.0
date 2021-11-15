@@ -1,7 +1,6 @@
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.*;
-
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -34,6 +33,33 @@ class MainTest {
     }
 
     Main m;
+
+    @Test
+    void correctlyGetsProducts() {
+        m = new Main();
+        m.createProducts();
+        assertEquals(7, m.getProducts().size());
+    }
+
+    @Test
+    void creatingProducts() {
+        m = new Main();
+        m.createProducts();
+        Product p = new Product("Coffee", 15, new ProductGroup("Drinks", new Vat12()));
+        assertEquals(p.toString(), m.getProducts().get(0).toString());
+    } 
+
+    @Test
+    void orderIsCorrectlyPrinted() {
+        m = new Main();
+        m.createProducts();
+        m.addOrder();
+        System.setOut(new PrintStream(outputStreamCaptor));
+        Product p = new Product("Ham", 20, new ProductGroup("Toppings", new Vat25()));
+        m.getOrder().addProduct(p);
+        m.printOrder();
+        assertEquals("Ham, " + 25.0, outputStreamCaptor.toString().trim());
+    }
 
     @Test
     void orderIsCorrectlyAdded() {
@@ -172,7 +198,7 @@ class MainTest {
         assertEquals(customer, m.getOrder().getCustomer());
     }
 
-    @Test
+    @Test //"\r\n" ska byta ut "\n" för windows OS. För unix och linux funkar detta test annars som vanligt
     void menuIsCorrectlyPrinted() {
         m = new Main();
         System.setOut(new PrintStream(outputStreamCaptor));
