@@ -1,10 +1,6 @@
 import static org.junit.jupiter.api.Assertions.*;
 
-import java.io.BufferedInputStream;
-import java.io.ByteArrayInputStream;
 import java.io.*;
-import java.io.InputStream;
-import java.io.PrintStream;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
@@ -17,7 +13,6 @@ class MainTest {
     static InputStream sysIn;
     static PrintStream stdOut;
     InputStream iStream;
-    FileRead fReader = new FileRead();
 
     @BeforeAll
     static void saveSysIn() {
@@ -137,10 +132,20 @@ class MainTest {
 
     @Test
     void userIsAskedForMembershipAndSaysNo() {
+        InputStream in = createStream("no");
+        m = new Main(in);
+        Money money = new Money(1000.0);
+        Customer customer = new Customer(money);
+        m.setCustomer(customer);
+        assertNull(m.getMembership());
+    }
+
+    @Test
+    void askForMoneyTest() {
         InputStream in = createStream("1000.0");
         m = new Main(in);
+
         Customer customer = new Customer(new Money(m.askForMoney()));
-        m.setCustomer(customer);
         assertEquals(1000.0, customer.getMoney().getAmount());
     }
 
@@ -152,6 +157,33 @@ class MainTest {
 
         m.commandLoop();
 
-        assertEquals("Exiting program", outputStreamCaptor.toString().trim().substring(187));
+        String[] arr = outputStreamCaptor.toString().trim().split("\n");
+
+        assertEquals("Exiting program", arr[9]);
+    }
+
+    @Test
+    void setCustomerSetsCorrectCustomer() {
+        Money money = new Money(1000.0);
+        Customer customer = new Customer(money);
+        m = new Main();
+        m.setCustomer(customer);
+        m.addOrder();
+        assertEquals(customer, m.getOrder().getCustomer());
+    }
+
+    @Test
+    void menuIsCorrectlyPrinted() {
+        m = new Main();
+        System.setOut(new PrintStream(outputStreamCaptor));
+        m.printCommands();
+        assertEquals("The following commands exist. Please write the number of the command\n"
+        + "1.Show products\n"
+        + "2.Add product\n"
+        + "3.Add discount\n"
+        + "4.Remove product\n"
+        + "5.Pay\n"
+        + "6.Buy discount for points\n"
+        + "7.Show order", outputStreamCaptor.toString().trim());
     }
 };

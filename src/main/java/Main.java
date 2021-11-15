@@ -1,5 +1,4 @@
 import java.io.InputStream;
-import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -103,7 +102,8 @@ public class Main {
 
     protected double askForMoney() {
         System.out.println("How much money do you have?");
-        return keyboardInput.nextDouble();
+        String m = keyboardInput.nextLine();
+        return Double.parseDouble(m);
     }
 
     protected void printCommands() {
@@ -111,7 +111,7 @@ public class Main {
         System.out.println("1.Show products");
         System.out.println("2.Add product");
         System.out.println("3.Add discount");
-        System.out.println("4.Remove product ");
+        System.out.println("4.Remove product");
         System.out.println("5.Pay");
         System.out.println("6.Buy discount for points");
         System.out.println("7.Show order");
